@@ -23,6 +23,7 @@ const initialProject = {
             subtitle: "Enjoy competitive medical billing rates at 2.8% without promotional schemes. We work as an extension of your staff to deliver medical billing excellence.",
             buttonText: "Get Free Audit",
             buttonLink: "#contact",
+            image: "/medical_billing_dashboard.png",
             bgColor: "#ffffff",
             bgGradient: "linear-gradient(180deg, #ffffff 0%, #f1faf8 100%)",
             textColor: "#1A1A2E",
