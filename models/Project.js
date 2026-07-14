@@ -49,6 +49,11 @@ const projectSchema = new mongoose.Schema({
   ],
   isPublished: { type: Boolean, default: false },
   publishedUrl: { type: String, default: "" },
+  // Draft content lives in pages/settings. These fields are the last explicitly
+  // published version and are the only content exposed by the public API.
+  publishedPages: { type: [pageSchema], default: undefined },
+  publishedSettings: { type: mongoose.Schema.Types.Mixed, default: null },
+  publishedAt: { type: Date, default: null },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
 });

@@ -10,6 +10,10 @@ exports.deploy = async (req, res) => {
       return res.status(404).json({ message: "Project not found" });
     }
 
+    if (!project.pages?.length) {
+      return res.status(400).json({ message: "Add at least one page before publishing" });
+    }
+
     const deployment = new Deployment({
       project: project._id,
       url: `https://${project.slug}.vercel.app`,
@@ -35,6 +39,11 @@ exports.deploy = async (req, res) => {
 
       project.isPublished = true;
       project.publishedUrl = result.url;
+      // Keep a separate, immutable public version. Saving afterward creates a
+      // draft; it cannot accidentally change the live website.
+      project.publishedPages = JSON.parse(JSON.stringify(project.pages));
+      project.publishedSettings = JSON.parse(JSON.stringify(project.settings || {}));
+      project.publishedAt = new Date();
       await project.save();
     } else {
       deployment.status = "failed";

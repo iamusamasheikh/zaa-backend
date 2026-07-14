@@ -19,8 +19,10 @@ router.get("/page", async (req, res) => {
       targetSlug = "/" + targetSlug;
     }
 
-    // Find the primary project
-    let project = await Project.findOne({ slug: "zaa-med-solutions" });
+    // Use an explicit project in production; keeping a default makes the
+    // existing ZAA installation work without a breaking migration.
+    const projectSlug = process.env.PUBLIC_PROJECT_SLUG || "zaa-med-solutions";
+    let project = await Project.findOne({ slug: projectSlug });
     if (!project) {
       // Fallback to first project
       project = await Project.findOne();
@@ -30,8 +32,17 @@ router.get("/page", async (req, res) => {
       return res.status(404).json({ success: false, message: "No projects found" });
     }
 
+    if (!project.isPublished) {
+      return res.status(404).json({ success: false, message: "Website has not been published yet" });
+    }
+
+    // Legacy projects published before snapshots existed continue to render
+    // until their first new Publish. Every subsequent publish uses the
+    // snapshot, so drafts are never leaked to the public website.
+    const publicPages = project.publishedPages?.length ? project.publishedPages : project.pages;
+
     // Find the requested page
-    const page = project.pages.find(
+    const page = publicPages.find(
       (p) => p.slug === targetSlug || p.id === slug || p.name.toLowerCase() === slug.toLowerCase()
     );
 
@@ -57,7 +68,8 @@ router.get("/page", async (req, res) => {
 // Public API to get site settings
 router.get("/settings", async (req, res) => {
   try {
-    let project = await Project.findOne({ slug: "zaa-med-solutions" });
+    const projectSlug = process.env.PUBLIC_PROJECT_SLUG || "zaa-med-solutions";
+    let project = await Project.findOne({ slug: projectSlug });
     if (!project) {
       project = await Project.findOne();
     }
@@ -65,10 +77,13 @@ router.get("/settings", async (req, res) => {
     if (!project) {
       return res.status(404).json({ success: false, message: "No projects found" });
     }
+    if (!project.isPublished) {
+      return res.status(404).json({ success: false, message: "Website has not been published yet" });
+    }
 
     res.json({
       success: true,
-      settings: project.settings,
+      settings: project.publishedSettings || project.settings,
     });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
