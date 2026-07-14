@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
+const path = require("path");
 const connectDB = require("./config/db");
 
 dotenv.config();
@@ -31,11 +32,16 @@ app.use(async (req, res, next) => {
   }
 });
 app.use("/uploads", express.static("uploads"));
+app.use("/builder", express.static(path.join(__dirname, "builder")));
+app.get("/builder/*", (req, res) => {
+  res.sendFile(path.join(__dirname, "builder", "index.html"));
+});
 
 app.use("/api/auth", require("./routes/auth"));
 app.use("/api/projects", require("./routes/projects"));
 app.use("/api/deploy", require("./routes/deploy"));
 app.use("/api/media", require("./routes/media"));
+app.use("/api", require("./routes/public"));
 
 app.use(require("./middleware/errorHandler"));
 

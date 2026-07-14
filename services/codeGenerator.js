@@ -1,7 +1,8 @@
 const fs = require("fs-extra");
 const path = require("path");
 
-const OUTPUT_DIR = path.join(__dirname, "../../generated");
+const os = require("os");
+const OUTPUT_DIR = process.env.VERCEL ? path.join(os.tmpdir(), "generated") : path.join(__dirname, "../../generated");
 
 async function generateProjectFiles(project) {
   const projectDir = path.join(OUTPUT_DIR, project.slug);

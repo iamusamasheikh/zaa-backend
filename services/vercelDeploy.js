@@ -2,6 +2,14 @@ const { execSync } = require("child_process");
 
 async function deployToVercel(projectPath, slug) {
   try {
+    const token = process.env.VERCEL_TOKEN;
+    if (!token || token === "your-vercel-token" || token.trim() === "") {
+      // In database-driven dynamic mode, we don't need to rebuild Vercel.
+      // Saving to the DB is sufficient. We return success with the live website URL.
+      const url = process.env.FRONTEND_URL || "https://zaamedsolutions.com";
+      return { success: true, url, skippedCli: true };
+    }
+
     try {
       execSync("vercel --version", { stdio: "ignore" });
     } catch {
@@ -12,7 +20,7 @@ async function deployToVercel(projectPath, slug) {
       `cd "${projectPath}" && vercel --prod --yes`,
       {
         encoding: "utf-8",
-        env: { ...process.env, VERCEL_TOKEN: process.env.VERCEL_TOKEN },
+        env: { ...process.env, VERCEL_TOKEN: token },
       }
     );
 
