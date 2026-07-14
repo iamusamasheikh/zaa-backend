@@ -1,4 +1,5 @@
 const Project = require("../models/Project");
+const initialProject = require("../config/initialProject");
 
 exports.getProjects = async (req, res) => {
   try {
@@ -103,8 +104,6 @@ exports.duplicateProject = async (req, res) => {
   }
 };
 
-const initialProject = require("../config/initialProject");
-
 exports.resetProject = async (req, res) => {
   try {
     const project = await Project.findOneAndUpdate(
@@ -122,6 +121,38 @@ exports.resetProject = async (req, res) => {
     }
 
     res.json({ message: "Project reset to initial website template success", project });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Safely upgrades projects created by the old builder, where every page except
+// Home was created with an empty sections array. Existing page edits are kept.
+exports.restoreMissingPageTemplates = async (req, res) => {
+  try {
+    const project = await Project.findOne({ slug: req.params.slug, user: req.userId });
+    if (!project) {
+      return res.status(404).json({ message: "Project not found" });
+    }
+
+    let restored = 0;
+    project.pages.forEach((page) => {
+      if (page.sections?.length) return;
+      const template = initialProject.pages.find(
+        (candidate) => candidate.id === page.id || candidate.slug === page.slug
+      );
+      if (!template?.sections?.length) return;
+      page.sections = JSON.parse(JSON.stringify(template.sections));
+      if (!page.seo?.title && template.seo) page.seo = JSON.parse(JSON.stringify(template.seo));
+      restored += 1;
+    });
+
+    if (restored) {
+      project.updatedAt = Date.now();
+      await project.save();
+    }
+
+    res.json({ message: `${restored} missing page template(s) restored`, restored, project });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

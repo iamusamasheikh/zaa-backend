@@ -8,6 +8,7 @@ const {
   deleteProject,
   duplicateProject,
   resetProject,
+  restoreMissingPageTemplates,
 } = require("../controllers/projectController");
 const auth = require("../middleware/auth");
 
@@ -18,5 +19,6 @@ router.put("/:slug", auth, updateProject);
 router.delete("/:slug", auth, deleteProject);
 router.post("/:slug/duplicate", auth, duplicateProject);
 router.post("/:slug/reset", auth, resetProject);
+router.post("/:slug/restore-missing-pages", auth, restoreMissingPageTemplates);
 
 module.exports = router;

@@ -1,3 +1,37 @@
+const createEditablePageSections = (id, title, description, buttonText = "Get Free Audit") => [
+  {
+    id: `${id}-hero`,
+    type: "hero",
+    props: {
+      title,
+      subtitle: description,
+      buttonText,
+      buttonLink: "/contact",
+      bgColor: "#ffffff",
+      bgGradient: "linear-gradient(180deg, #ffffff 0%, #f1faf8 100%)",
+      textColor: "#1A1A2E",
+      buttonBgColor: "#1ABC9C",
+      buttonTextColor: "#ffffff",
+      alignment: "left",
+      showBadge: false,
+    },
+  },
+  {
+    id: `${id}-content`,
+    type: "textBlock",
+    props: {
+      heading: title,
+      paragraph: description,
+      headingColor: "#1A1A2E",
+      textColor: "#555555",
+      bgColor: "#ffffff",
+      alignment: "left",
+      padding: 80,
+      maxWidth: "900px",
+    },
+  },
+];
+
 const initialProject = {
   name: "ZAA Med Solutions",
   slug: "zaa-med-solutions",
@@ -230,7 +264,7 @@ const initialProject = {
       id: "about",
       name: "About Us",
       slug: "/about",
-      sections: [], // Empty sections will automatically fallback to the original beautiful static page!
+      sections: createEditablePageSections("about", "About ZAA Med Solutions", "Learn about ZAA Med Solutions, your trusted medical billing and revenue cycle management partner. Our team helps healthcare practices build stronger, more predictable revenue cycles."),
       seo: {
         title: "About Us | ZAA Med Solutions - Medical Billing Partner",
         description: "Learn about ZAA Med Solutions, your trusted medical billing and revenue cycle partner since 2022.",
@@ -241,7 +275,7 @@ const initialProject = {
       id: "services",
       name: "Our Services",
       slug: "/services",
-      sections: [],
+      sections: createEditablePageSections("services", "Our Medical Billing Services", "Explore comprehensive medical billing, provider credentialing, accounts receivable management, denial management, and revenue cycle management services."),
       seo: {
         title: "Our Services | ZAA Med Solutions - Medical Billing & Revenue Cycle Management",
         description: "Explore our comprehensive medical billing, provider credentialing, Accounts Receivable management, denial management, and RCM services.",
@@ -252,7 +286,7 @@ const initialProject = {
       id: "services-medical-billing",
       name: "Medical Billing",
       slug: "/services/medical-billing",
-      sections: [],
+      sections: createEditablePageSections("services-medical-billing", "Medical Billing Services", "Accurate, prompt, and compliant medical billing services designed to improve collections and reduce claim rejections."),
       seo: {
         title: "Medical Billing Services | ZAA Med Solutions",
         description: "Professional Medical Billing Services services for healthcare providers. Starting at 2.8%. HIPAA compliant. Free consultation.",
@@ -263,7 +297,7 @@ const initialProject = {
       id: "services-credentialing",
       name: "Credentialing",
       slug: "/services/credentialing",
-      sections: [],
+      sections: createEditablePageSections("services-credentialing", "Medical Credentialing", "Quick provider credentialing and enrollment support to help your practice get paneled and stay in network."),
       seo: {
         title: "Medical Credentialing Services | ZAA Med Solutions",
         description: "Quick provider credentialing and enrollment. Get paneled and in-network with key payers fast.",
@@ -274,7 +308,7 @@ const initialProject = {
       id: "services-ar-management",
       name: "A/R Management",
       slug: "/services/ar-management",
-      sections: [],
+      sections: createEditablePageSections("services-ar-management", "Accounts Receivable Management", "Dedicated A/R follow-up and denial recovery services to reduce aging balances and recover the revenue you have earned."),
       seo: {
         title: "Account Receivable Management | ZAA Med Solutions",
         description: "Trusted Accounts Receivable management services. Aggressive payer follow-ups, claim recovery, and clean claims.",
@@ -285,7 +319,7 @@ const initialProject = {
       id: "services-rcm",
       name: "Practice Management / RCM",
       slug: "/services/rcm",
-      sections: [],
+      sections: createEditablePageSections("services-rcm", "Revenue Cycle Management", "End-to-end revenue cycle management that optimizes eligibility, coding, claims, payments, and denial workflows."),
       seo: {
         title: "Revenue Cycle Management (RCM) | ZAA Med Solutions",
         description: "Optimize collections, medical coding, eligibility checks, claim validations, and denials management.",
@@ -296,7 +330,7 @@ const initialProject = {
       id: "services-web-development",
       name: "Web Development",
       slug: "/services/web-development",
-      sections: [],
+      sections: createEditablePageSections("services-web-development", "Healthcare Web Development", "Professional websites and digital tools built for medical practices, with clear patient journeys and reliable performance."),
       seo: {
         title: "Web Development Services | ZAA Med Solutions",
         description: "Custom medical office websites, behavioral health portals, headless CMS setups, and secure web application development.",
@@ -307,7 +341,7 @@ const initialProject = {
       id: "services-seo",
       name: "SEO",
       slug: "/services/seo",
-      sections: [],
+      sections: createEditablePageSections("services-seo", "Healthcare SEO", "Search engine optimization and digital transformation services that help healthcare businesses reach the right audience."),
       seo: {
         title: "SEO & Digital Transformation | ZAA Med Solutions",
         description: "Rank organic keywords on Google first page. Search engine optimization, local search listings, and workflow automation.",
@@ -318,7 +352,7 @@ const initialProject = {
       id: "contact",
       name: "Contact Us",
       slug: "/contact",
-      sections: [],
+      sections: createEditablePageSections("contact", "Contact ZAA Med Solutions", "Talk to our medical billing specialists and request a free review of your practice's revenue cycle."),
       seo: {
         title: "Contact Us | ZAA Med Solutions",
         description: "Get in touch with our medical billing and credentialing experts. We are one call away.",
@@ -329,7 +363,7 @@ const initialProject = {
       id: "blog",
       name: "Blog",
       slug: "/blog",
-      sections: [],
+      sections: createEditablePageSections("blog", "Blog & Industry Insights", "Read practical updates, expert guidance, and healthcare revenue cycle insights from the ZAA Med Solutions team.", "Contact Us"),
       seo: {
         title: "Blog & Industry Insights | ZAA Med Solutions",
         description: "Latest industry insights, expert tips, and regulation updates in medical billing, credentialing, and revenue cycle management.",
