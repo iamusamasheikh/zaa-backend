@@ -102,3 +102,27 @@ exports.duplicateProject = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+const initialProject = require("../config/initialProject");
+
+exports.resetProject = async (req, res) => {
+  try {
+    const project = await Project.findOneAndUpdate(
+      { slug: req.params.slug, user: req.userId },
+      {
+        pages: initialProject.pages,
+        settings: initialProject.settings,
+        updatedAt: Date.now()
+      },
+      { new: true }
+    );
+
+    if (!project) {
+      return res.status(404).json({ message: "Project not found" });
+    }
+
+    res.json({ message: "Project reset to initial website template success", project });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
