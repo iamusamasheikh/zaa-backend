@@ -7,11 +7,6 @@ dotenv.config();
 
 const app = express();
 
-app.use(async (req, res, next) => {
-  await connectDB();
-  next();
-});
-
 const allowedOrigins = (process.env.ALLOWED_ORIGINS || "").split(",").filter(Boolean);
 
 app.use(cors({
@@ -25,6 +20,16 @@ app.use(cors({
   credentials: true
 }));
 app.use(express.json());
+
+app.use(async (req, res, next) => {
+  try {
+    await connectDB();
+    next();
+  } catch (err) {
+    console.error("DB connection failed:", err.message);
+    res.status(503).json({ message: "Database unavailable" });
+  }
+});
 app.use("/uploads", express.static("uploads"));
 
 app.use("/api/auth", require("./routes/auth"));
@@ -40,6 +45,5 @@ if (process.env.VERCEL) {
   module.exports = app;
 } else {
   app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+  module.exports = app;
 }
-
-module.exports = app;
