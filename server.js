@@ -4,9 +4,13 @@ const dotenv = require("dotenv");
 const connectDB = require("./config/db");
 
 dotenv.config();
-connectDB();
 
 const app = express();
+
+app.use(async (req, res, next) => {
+  await connectDB();
+  next();
+});
 
 const allowedOrigins = (process.env.ALLOWED_ORIGINS || "").split(",").filter(Boolean);
 
